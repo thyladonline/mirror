@@ -1,0 +1,29 @@
+<div *ngIf="(weatherCurrent$ | async) as weatherCurrent" class="weather">
+    <div class="weatherCity">
+      <img src="/public/icons/location.svg">{{weatherCurrent.name}}
+    </div>
+  <div class="weatherTemp">
+    {{weatherCurrent.main.temp}}<img src="/public/icons/celsius.svg"><img src="/public/icons/{{weatherCurrent.weather[0].icon}}.svg">
+  </div>
+  <div class="weatherAera">
+    {{weatherCurrent.weather[0].description}}
+  </div>
+  <!-- <div class="weatherAera2">
+    <img src="/public/icons/humidity.png">{{weatherCurrent.main.humidity}}%
+  </div> -->
+</div>
+<!-- <div class="weatherChart">
+  <canvas id="line-chart_{{city}}"></canvas>
+</div> -->
+
+  <!-- <div>     
+      <img src="/public/icons/{{weatherCurrent.weather[0].icon}}.svg">
+      <img src="/public/icons/temperature.svg">
+      <img src="/public/icons/minus.png">{{weatherCurrent.main.temp_min}}<img src="/public/icons/celsius.svg">
+      <img src="/public/icons/plus.png">{{weatherCurrent.main.temp_max}}<img src="/public/icons/celsius.svg">
+  </div>
+  <div>
+    <img src="/public/icons/precipitation.png">{{weatherCurrent.main.pressure}}
+    <img src="/public/icons/humidity.png">{{weatherCurrent.main.humidity}}
+    <img src="/public/icons/wind.png">{{weatherCurrent.wind.speed}}km/h
+  </div> -->

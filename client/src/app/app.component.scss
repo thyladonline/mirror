@@ -1,0 +1,26 @@
+// div {
+//     border: 1px solid;
+// }
+.wrapper {
+    display:grid;
+    grid-gap:5px;
+    grid-template-columns: 33% 33% 33%;
+}
+header {
+    grid-column:1/span 2;    
+}
+article {
+    grid-column:1/span 2;
+}
+nav {
+    grid-column:3;
+    grid-row:1/span 2;
+    //padding-left:25%;
+    text-align:right;
+}
+footer {
+    grid-column:1/span 3;
+   // font-size:0.5em;
+    text-align:right;
+    font-style:italic;
+}

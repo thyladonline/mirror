@@ -1,0 +1,30 @@
+
+<script src="/public/js/setup.js"></script>
+<script src="angular-apikeys.min.js"></script>
+<div class="wrapper">
+    <header>
+        <h1>
+            {{title}}
+        </h1>
+    </header>
+    <article>
+        <div *ngIf="(user$ | async) as user">
+            <!-- <ul id="double"> -->
+            <ul>
+                <li *ngFor="let cityWeather of user.cityWeathers">            
+                    <app-weather [city]="cityWeather.name"></app-weather>
+                </li>
+            </ul>
+        </div>
+    </article>
+    <nav>
+        <h2>{{hourLabel}}</h2>
+        <p>{{dayLabel}} {{dateLabel}}</p>
+    </nav>
+    <footer>
+        Miroir... mon beau miroir
+    </footer>
+</div>
+<button id="buttonAddProfil" hidden="true">
+   Take Photo
+</button>

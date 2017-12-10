@@ -1,0 +1,40 @@
+{
+	"coord": {
+		"lon": 7.37,
+		"lat": 48.08
+	},
+	"weather": [{
+		"id": 500,
+		"main": "Rain",
+		"description": "légères pluies",
+		"icon": "10n"
+	}],
+	"base": "stations",
+	"main": {
+		"temp": 9.5,
+		"pressure": 1018,
+		"humidity": 81,
+		"temp_min": 9,
+		"temp_max": 10
+	},
+	"visibility": 10000,
+	"wind": {
+		"speed": 3.1,
+		"deg": 270
+	},
+	"clouds": {
+		"all": 0
+	},
+	"dt": 1509296400,
+	"sys": {
+		"type": 1,
+		"id": 5657,
+		"message": 0.002,
+		"country": "FR",
+		"sunrise": 1509257529,
+		"sunset": 1509293728
+	},
+	"id": 3024297,
+	"name": "Colmar",
+	"cod": 200
+}

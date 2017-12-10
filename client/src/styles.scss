@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+//$font-family-1: 'Segoe UI', sans-serif;
+body {
+    //font-family: $font-family-1;
+    font-family:'Segoe UI Light', sans-serif;
+    font-size:2.5em;;
+    color:#fff;
+    background-color:#444;
+}  
+img[src$='.svg'] {
+    width:40px;
+}
+// img[src$='.png'] {
+//     width:30px;
+// }
+ul {
+  width:100%;
+  margin-bottom:20px;
+  overflow:hidden;
+  //border-top:1px solid #ccc;
+}
+li {
+  line-height:1.5em;
+  //border-bottom:1px solid #ccc;
+  float:left;
+  display:inline;    
+}
+#double li { width:50%;}
+#triple li { width:33.333%; }
+#quad li { width:25%; }
+#six li { width:16.666%; }
