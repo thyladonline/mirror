@@ -1,17 +1,16 @@
-
 <script src="/public/js/setup.js"></script>
-<script src="angular-apikeys.min.js"></script>
 <div class="wrapper">
     <header>
-        <h1>
-            {{title}}
-        </h1>
+        <div>
+            <h1>
+                {{title}}
+            </h1>
+        </div>
     </header>
     <article>
-        <div *ngIf="(user$ | async) as user">
-            <!-- <ul id="double"> -->
-            <ul>
-                <li *ngFor="let cityWeather of user.cityWeathers">            
+        <div>
+            <ul id="double">
+                <li *ngFor="let cityWeather of weathers">
                     <app-weather [city]="cityWeather.name"></app-weather>
                 </li>
             </ul>
@@ -25,6 +24,7 @@
         Miroir... mon beau miroir
     </footer>
 </div>
+<app-listen *ngIf="speech.speechSupported"></app-listen>
 <button id="buttonAddProfil" hidden="true">
    Take Photo
 </button>

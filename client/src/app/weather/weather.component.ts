@@ -1,12 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ApplicationRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { User } from 'app/user';
-import { OpenweathermapService } from 'app/services/openweathermap.service';
 import * as OpenweathermapCurrent from 'OpenweathermapCurrent';
 import * as OpenweathermapForecast from 'OpenweathermapForecast';
 
 import * as chartlib from 'chart.js';
+
+import { OpenweathermapService } from 'app/services/openweathermap.service';
 
 @Component({
   selector: 'app-weather',
@@ -15,31 +16,42 @@ import * as chartlib from 'chart.js';
   styleUrls: ['./weather.component.scss']
 })
 export class WeatherComponent implements OnInit {
-  @Input() city: string;  
-  weatherCurrent$: Observable<OpenweathermapCurrent.WeatherCurrent>;
+  @Input() city: string;
+  //weatherCurrent$: Observable<OpenweathermapCurrent.WeatherCurrent>;
+  weatherCurrent: OpenweathermapCurrent.WeatherCurrent;
   labels: Array<string> = [];
   dataset: Array<number> = [];
 
-  constructor(private openweathermapService: OpenweathermapService) {
+  constructor(private app: ApplicationRef, private openweathermapService: OpenweathermapService) {
   }
-  // constructor(user: User) {
-  //   console.log('WeatherComponent ctor...');
-  //   this.user = user;
-  // }
 
   ngOnInit() {
     if (this.city === undefined) { return; }
-    console.log(`WeatherComponent initialization for city '${this.city}'`);
-    this.weatherCurrent$ = this.openweathermapService.getCurrent(this.city);
-    this.openweathermapService.getForecast(this.city)
-                              .forEach((data) => {
-                                  console.log(data);
-                                  data.list.map(step => {
-                                    this.labels.push(new Date(step.dt_txt).toLocaleTimeString().substring(0, 5));
-                                    this.dataset.push(step.main.temp);
-                                  });
-                                  this.loadChart();
-                              });
+    //console.log(`WeatherComponent initialization for city '${this.city}'`);
+    this.getWeather();
+  }
+
+  private getWeather(): void {
+    this.openweathermapService.getCurrent(this.city)
+    .subscribe(
+      (value) => {
+        setTimeout(() => {
+          this.weatherCurrent = value;
+          this.openweathermapService.getForecast(this.city)
+          .forEach((data) => {
+              console.log(data);
+              data.list.map(step => {
+                this.labels.push(new Date(step.dt_txt).toLocaleTimeString().substring(0, 5));
+                this.dataset.push(step.main.temp);
+              });
+              this.loadChart();
+          });
+          this.app.tick();
+        }, 1000);
+      }, (error) => {
+        console.log(error);
+      }
+    );
   }
 
   loadChart(): void {
@@ -61,8 +73,7 @@ export class WeatherComponent implements OnInit {
             borderColor: '#fff',
             backgroundColor: '#fff',
             fill: true
-          }
-        ]
+          }]
       },
       options: {
         responsive: true,

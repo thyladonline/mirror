@@ -2,18 +2,20 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-//import { ApiKey } from 'angular-apikeys';
 
-import { AppComponent } from './app.component';
-import { WeatherComponent } from './weather/weather.component';
+import { AppComponent } from 'app/app.component';
+import { WeatherComponent } from 'app/weather/weather.component';
+import { ListenComponent } from 'app/listen/listen.component';
 
-import { UserService } from 'app/services/user.service';
-import { OpenweathermapService } from './services/openweathermap.service';
+import { OpenweathermapService } from 'app/services/openweathermap.service';
+import { AuthenticationService } from 'app/services/authentication.service';
+import { SpeechService } from 'app/services/speech.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WeatherComponent
+    WeatherComponent,
+    ListenComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +24,8 @@ import { OpenweathermapService } from './services/openweathermap.service';
   ],
   providers: [
     OpenweathermapService,
-    UserService],
+    AuthenticationService,
+    SpeechService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

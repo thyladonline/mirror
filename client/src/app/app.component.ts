@@ -1,41 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ApplicationRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { UserService } from 'app/services/user.service';
-import { User, CityWeather, CityType } from 'app/user';
+import { User, CityWeather } from 'app/user';
+
+import { AuthenticationService } from 'app/services/authentication.service';
+import { SpeechService } from 'app/services/speech.service';
 
 @Component({
   selector: 'app-root',
+  providers: [AuthenticationService, SpeechService],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   title: string;
+  weathers: Array<CityWeather>;
   hourLabel: string;
   dayLabel: string;
   dateLabel: string;
 
   user$: Observable<User>;
 
-  constructor(private userService: UserService) {
+  constructor(private app: ApplicationRef, private speech: SpeechService, private authService: AuthenticationService) {
   }
 
   ngOnInit() {
-    console.log('AppComponent init...');
-    const user: User = this.userService.loadUser('Adeline');
-    // this.userService.addCity(user, new CityWeather('Strasbourg', CityType.Work));
-    // this.userService.saveUser(user);
-    this.user$ = Observable.create(observer => observer.next(user))
-                           .do(value => {
-                             this.title = `Bonjour ${value.username}`;
-                             console.log(value);
-                            });
-    this.setTitle(user);
+    this.getUser();
     this.setTodayLabel();
   }
 
-  setTitle(user: User = null) {
-    this.title = `Bonjour ${user == null ? 'Invité' : user.username}`;
+  getUser(): void {
+    this.user$ = this.authService.getCurrentUser()
+    this.user$.subscribe(
+      (value) => {
+        setTimeout(() => {
+          this.title = `Bonjour ${value.username}`;
+          this.speech.sayText(this.title);
+          if (!this.authService.isLoggedIn()) {
+            this.speech.sayText(`Pour connaître les commandes vocales disponibles, dîtes "${this.speech.helpCommand}"`);
+          }
+          this.weathers = value.cityWeathers;
+          this.app.tick();
+        }, 1000);
+      }, (error) => {
+        console.log(error);
+      }
+    );
   }
 
   formatNumber(value: number) { return ('0' + value).slice(-2); }
