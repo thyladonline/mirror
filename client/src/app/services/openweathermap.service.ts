@@ -29,8 +29,6 @@ export class OpenweathermapService {
   constructor(private http: Http) {
   }
 
-  //encodeURIComponent
-
   getCurrent(city): Observable<OpenweathermapCurrent.WeatherCurrent> {
     const cityName = `${city},fr`;
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&cnt=1&units=metric&lang=fr&appid=${APP_ID}`;
@@ -38,18 +36,18 @@ export class OpenweathermapService {
     return this.http
       .get(url)
       .map((res) => res.json() as OpenweathermapCurrent.WeatherCurrent)
-      //.do(value => console.log(value))
+      // .do(value => console.log(value))
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
   getForecast(city): Observable<OpenweathermapForecast.WeatherForecast> {
     const cityName = `${city},fr`;
-    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&cnt=10&units=metric&lang=fr&appid=${APP_ID}`;;
+    const url = `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&cnt=10&units=metric&lang=fr&appid=${APP_ID}`;
     console.log(url);
     return this.http
       .get(url)
       .map((res) => res.json() as OpenweathermapForecast.WeatherForecast)
-      //.do(value => console.log(value))
+      // .do(value => console.log(value))
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 }

@@ -1,13 +1,13 @@
 <!-- <div *ngIf="(weatherCurrent$ | async) as weatherCurrent" class="weather"> -->
-<div *ngIf="weatherCurrent" class="weather">
+<!-- <div *ngif="isLoaded" class="weather"> -->
+
+ <div *ngIf="weatherCurrent" class="weather">
     <div class="weatherCity">
       <img src="/public/icons/white/location.svg">{{weatherCurrent?.name}}
     </div>
   <div class="weatherTemp">
     {{weatherCurrent.main.temp}}<img src="/public/icons/white/celsius.svg"><img src="/public/icons/white/{{weatherCurrent.weather[0].icon}}.svg">
-  </div>
-  <div class="weatherAera">
-    {{weatherCurrent.weather[0].description}}
+    <span class="weatherAera">{{weatherCurrent.weather[0].description}}</span>
   </div>
 </div>
 <div class="weatherChart">

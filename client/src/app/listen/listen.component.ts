@@ -19,7 +19,7 @@ export class ListenComponent implements OnInit, OnDestroy {
   usersSub: Subscription;
   citiesSub: Subscription;
   errorsSub: Subscription;
-  errorMsg: string;
+  errorMsg: string = null;
 
   constructor(public speech: SpeechService, public authService: AuthenticationService) {
   }
@@ -38,22 +38,22 @@ export class ListenComponent implements OnInit, OnDestroy {
   }
 
   private _listenGlobal() {
+    this.errorMsg = null;
     this.usersSub = this.speech.words$
       .filter(obj => this.globalCommands.some(x => obj.type === x))
       .map(obj => obj)
       .subscribe(
         obj => {
           const action: string = obj.type;
-          // console.log('** debug _listenGlobal');
-          // console.log(`action:'${action}'`);
-          switch (action)
-          {
+          console.log('** debug _listenGlobal');
+          console.log(`action:'${action}'`);
+          switch (action) {
             case 'listCommands':
               this.speech.sayCommandsDescription();
               break;
-
             default:
               this._setError(`Action '${action}' isn\'t implemented`);
+              break;
           }
         }
       );
@@ -69,8 +69,7 @@ export class ListenComponent implements OnInit, OnDestroy {
           const username: string = obj.word;
           // console.log('** debug _listenUsers');
           // console.log(`action:'${action}', username:'${username}'`);
-          switch (action)
-          {
+          switch (action) {
             case 'addUser':
               this.authService.addUser(username);
               this.authService.login(username);
@@ -104,20 +103,18 @@ export class ListenComponent implements OnInit, OnDestroy {
           const cityname: string = obj.word;
           // console.log('** debug _listenCities');
           // console.log(`action:'${action}', cityname:'${cityname}'`);
-          switch (action)
-          {
+          switch (action) {
             case 'addCity':
               this.authService.addCity(cityname);
               this.speech.sayText(`La météo de la ville ${cityname} est disponible`);
               break;
-
             case 'removeCity':
-              this.authService.removeCity(cityname);
+            this.authService.removeCity(cityname);
               this.speech.sayText(`La météo de la ville ${cityname} n'est plus disponible`);
               break;
-
             default:
-            this._setError(`Action '${action}' isn\'t implemented`);
+              this._setError(`Action '${action}' isn\'t implemented`);
+              break;
           }
         }
       );

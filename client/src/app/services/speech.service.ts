@@ -14,8 +14,8 @@ export class SpeechService {
     helpCommand = 'lister les commandes vocales';
     commandsDescription: string = 'Les commandes vocales disponibles sont : ' +
       '"ajouter utilisateur [prénom]", ' +
-      '"se connecter en tant que utilisateur [prénom]", ' +
       '"supprimer utilisateur [prénom]", ' +
+      '"se connecter en tant que utilisateur [prénom]", ' +
       '"ajouter météo [nom de la ville]" ' +
       'OU "supprimer météo [nom de la ville]".';
 
@@ -32,7 +32,7 @@ export class SpeechService {
         return;
       }
       const msg = new SpeechSynthesisUtterance();
-      let voices = window.speechSynthesis.getVoices();
+      const voices = window.speechSynthesis.getVoices();
       msg.voice = voices[0];
       msg.volume = 1;
       msg.rate = 1;
@@ -53,11 +53,11 @@ export class SpeechService {
         'ajouter utilisateur *username': (username) => {
             this.words$.next({type: 'addUser', 'word': username});
         },
-        'se connecter en tant que *username': (username) => {
-          this.words$.next({type: 'loadUser', 'word': username});
-        },
         'supprimer utilisateur *username': (username) => {
             this.words$.next({type: 'removeUser', 'word': username});
+        },
+        'se connecter en tant que *username': (username) => {
+          this.words$.next({type: 'loadUser', 'word': username});
         },
         'ajouter météo *cityname': (cityname) => {
           this.words$.next({type: 'addCity', 'word': cityname});
@@ -65,11 +65,11 @@ export class SpeechService {
         'supprimer météo *cityname': (cityname) => {
           this.words$.next({type: 'removeCity', 'word': cityname});
         },
-        '* dis moi qui est (la plus belle|le plus beau)?' : () => {
+        'dis-moi qui est la plus :qualif': () => {
           this.sayText('C\'est sans conteste vous!');
         }
       };
-      //annyang.debug(true);
+      annyang.debug(true);
       annyang.setLanguage('fr-FR');
       annyang.addCommands(commands);
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ApplicationRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { User } from 'app/user';
@@ -17,40 +17,42 @@ import { OpenweathermapService } from 'app/services/openweathermap.service';
 })
 export class WeatherComponent implements OnInit {
   @Input() city: string;
-  //weatherCurrent$: Observable<OpenweathermapCurrent.WeatherCurrent>;
-  weatherCurrent: OpenweathermapCurrent.WeatherCurrent;
+  isLoaded = false;
+  // weatherCurrent$: Observable<OpenweathermapCurrent.WeatherCurrent>;
+  public weatherCurrent: OpenweathermapCurrent.WeatherCurrent = undefined;
   labels: Array<string> = [];
   dataset: Array<number> = [];
 
-  constructor(private app: ApplicationRef, private openweathermapService: OpenweathermapService) {
+  constructor(private openweathermapService: OpenweathermapService) {
   }
 
   ngOnInit() {
-    if (this.city === undefined) { return; }
-    //console.log(`WeatherComponent initialization for city '${this.city}'`);
+    if (!this.city) {
+      this.isLoaded = true;
+      return;
+    }
+    // console.log(`WeatherComponent initialization for city '${this.city}'`);
     this.getWeather();
   }
 
   private getWeather(): void {
+    console.log(this.city);
     this.openweathermapService.getCurrent(this.city)
     .subscribe(
-      (value) => {
-        setTimeout(() => {
+      (value: OpenweathermapCurrent.WeatherCurrent) => {
           this.weatherCurrent = value;
+          this.isLoaded = true;
           this.openweathermapService.getForecast(this.city)
-          .forEach((data) => {
-              console.log(data);
-              data.list.map(step => {
-                this.labels.push(new Date(step.dt_txt).toLocaleTimeString().substring(0, 5));
-                this.dataset.push(step.main.temp);
-              });
-              this.loadChart();
-          });
-          this.app.tick();
-        }, 1000);
-      }, (error) => {
-        console.log(error);
-      }
+          .subscribe((data: OpenweathermapForecast.WeatherForecast) => {
+                console.log(data);
+                data.list.map(step => {
+                  this.labels.push(new Date(step.dt_txt).toLocaleTimeString().substring(0, 5));
+                  this.dataset.push(step.main.temp);
+                });
+                this.loadChart();
+            });
+          },
+          (error) => { console.log(error); }
     );
   }
 
@@ -61,7 +63,7 @@ export class WeatherComponent implements OnInit {
     chartlib.Chart.defaults.global.defaultFontFamily = 'Segoe UI';
     chartlib.Chart.defaults.global.defaultColor = '#000000';
     new chartlib.Chart(document.getElementById('line-chart_' + this.city), {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: this.labels,
         datasets: [{

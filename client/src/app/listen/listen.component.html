@@ -1,23 +1,17 @@
-<!-- <div>
-    <button
-    class="btn btn-primary col-6"
-    (click)="speech.startListening()"
-    [disabled]="speech.listening">
-      <img class="icon" src="/assets/images/mic-on.png">{{btnLabel}}
-  </button>
+<button (click)="speech.startListening()" [disabled]="speech.listening">
+    <img class="icon" src="/assets/images/mic-on.png">
+    <!-- {{btnLabel}} -->
+</button>
+<button (click)="speech.abort()" [disabled]="!speech.listening">
+    <img class="icon" src="/assets/images/mic-off.png">
+    <!-- Stop -->
+</button>
 
-  <button
-    class="btn btn-danger col-6"
-    (click)="speech.abort()"
-    [disabled]="!speech.listening">
-      <img class="icon" src="/assets/images/mic-off.png">Stop
-  </button>
-</div> -->
-
-<div class="row" *ngIf="errorMsg">
-    <div class="col">
-      <p class="alert alert-warning">
-        {{errorMsg}}
-      </p>
-    </div>
+<!-- <div class="row" *ngif="errorMsg">
+  <div class="col">
+    <p class="alert alert-warning">
+      {{errorMsg}}
+    </p>
   </div>
+</div> -->
+  

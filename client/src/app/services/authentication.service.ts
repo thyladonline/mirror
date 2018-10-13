@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { User, CityWeather } from 'app/user';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthenticationService {
@@ -82,7 +83,7 @@ export class AuthenticationService {
         resultUser = users.find(x => x.username === username);
 
         if (resultUser === undefined && username !== undefined) {
-            resultUser = new User(username, [])
+            resultUser = new User(username, []);
             this.saveUser(resultUser, users);
         }
 

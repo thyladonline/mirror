@@ -1,4 +1,4 @@
-import { Component, OnInit, ApplicationRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { User, CityWeather } from 'app/user';
@@ -14,47 +14,56 @@ import { SpeechService } from 'app/services/speech.service';
 })
 export class AppComponent implements OnInit {
   title: string;
-  weathers: Array<CityWeather>;
+  weathers: Array<CityWeather> = [];
   hourLabel: string;
   dayLabel: string;
   dateLabel: string;
 
-  user$: Observable<User>;
+  user: User;
 
-  constructor(private app: ApplicationRef, private speech: SpeechService, private authService: AuthenticationService) {
+  // Rafraichir l'heure toutes les
+  // timer$ = Observable.interval(1000); // secondes
+  timer$ = Observable.interval(60000);  // minutes
+
+  constructor(private speech: SpeechService, private authService: AuthenticationService) {
   }
 
   ngOnInit() {
-    this.getUser();
-    this.setTodayLabel();
+    this.loadUser();
+    this.setToday();
+    // this.setLiteralToday();
+    this.timer$.subscribe((x) => { this.setToday(); });
   }
 
-  getUser(): void {
-    this.user$ = this.authService.getCurrentUser()
-    this.user$.subscribe(
+  loadUser(): void {
+    this.authService.getCurrentUser().subscribe(
       (value) => {
-        setTimeout(() => {
-          this.title = `Bonjour ${value.username}`;
-          this.speech.sayText(this.title);
-          if (!this.authService.isLoggedIn()) {
-            this.speech.sayText(`Pour connaître les commandes vocales disponibles, dîtes "${this.speech.helpCommand}"`);
-          }
-          this.weathers = value.cityWeathers;
-          this.app.tick();
-        }, 1000);
-      }, (error) => {
+        this.user = value;
+        this.title = `Bonjour ${this.user.username}`;
+        this.speech.sayText(this.title);
+        if (!this.authService.isLoggedIn()) {
+          this.speech.sayText(`Pour connaître les commandes vocales disponibles, dîtes "${this.speech.helpCommand}"`);
+        }
+        this.weathers = value.cityWeathers;
+      },
+      (error) => {
         console.log(error);
-      }
-    );
+      });
   }
 
   formatNumber(value: number) { return ('0' + value).slice(-2); }
 
-  setTodayLabel() {
+  setToday() {
+    const now: Date = new Date();
+    // this.hourLabel = `${this.formatNumber(now.getHours())}:${this.formatNumber(now.getMinutes())}:${this.formatNumber(now.getSeconds())}`;
+    this.hourLabel = `${this.formatNumber(now.getHours())}:${this.formatNumber(now.getMinutes())}`;
+    this.dateLabel = `${this.formatNumber(now.getDay())}/${this.formatNumber(now.getMonth())}/${now.getFullYear()}`;
+  }
+
+  setLiteralToday() {
     const now: Date = new Date();
     this.hourLabel = `${this.formatNumber(now.getHours())}:${this.formatNumber(now.getMinutes())}`;
-    switch (now.getDay())
-    {
+    switch (now.getDay()) {
       case 0: this.dayLabel = 'Dimanche'; break;
       case 1: this.dayLabel = 'Lundi'; break;
       case 2: this.dayLabel = 'Mardi'; break;
@@ -65,8 +74,7 @@ export class AppComponent implements OnInit {
       default: this.dayLabel = '';
     }
     let monthLabel: string;
-    switch (now.getMonth())
-    {
+    switch (now.getMonth()) {
       case 0: monthLabel = 'Janvier'; break;
       case 1: monthLabel = 'Février'; break;
       case 2: monthLabel = 'Mars'; break;
